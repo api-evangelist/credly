@@ -1,0 +1,66 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Credly
+providerId: credly
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Digital Credentials
+- Open Badges
+- Pearson
+- Rate Limiting
+- Quotas
+description: >-
+  Credly does not publish fixed numeric request-rate limits for its Web Service
+  API. In practice the API is paginated - list endpoints such as issued badges,
+  badge templates, and the events feed return bounded pages (the events feed
+  returns at most 50 results per page and uses a page parameter for additional
+  pages). Bulk issuing is performed page-by-page rather than in a single
+  unbounded call. OAuth 2.0 access tokens are short-lived (2 hours), which
+  effectively bounds token reuse. Any per-account request throttling is governed
+  by an organization's contract with Credly (Pearson) rather than a documented
+  public ceiling.
+notes: >-
+  No public per-minute or per-hour numeric API rate limit is documented as of
+  the review date. Assume the platform may throttle abusive traffic and honor
+  standard 429 handling. Confirm any contractual rate or volume limits with
+  Credly during reconciliation.
+sources:
+- https://docs.credly.com/browse/docs/getting-started
+- https://docs.credly.com/browse/docs/authentication-methods
+- https://www.credly.com/docs/issued_badges
+responseCodes:
+  throttled: 429
+limits:
+- name: Web Service API Requests
+  scope: account
+  metric: requests
+  limit: not published
+  notes: No fixed numeric request-rate limit is documented for the Web Service API.
+- name: Events Feed Page Size
+  scope: endpoint
+  metric: results
+  limit: 50 per page
+  notes: GET /v1/organizations/{organization_id}/events returns at most 50 results; page through with the page parameter.
+- name: Paginated List Endpoints
+  scope: endpoint
+  metric: results
+  limit: paginated
+  notes: Badge template and issued badge lists are paginated with metadata (current_page, total_pages, total_count).
+- name: OAuth Access Token Lifetime
+  scope: token
+  metric: seconds
+  limit: 7200
+  notes: OAuth 2.0 client_credentials access tokens expire after 2 hours; authorization tokens expire after 180 days.
+policies:
+- name: Pagination
+  description: Iterate list and events endpoints using the page parameter and response metadata rather than requesting unbounded result sets.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor Retry-After on 429 responses.
+- name: Token Refresh
+  description: Refresh OAuth access tokens before the 2-hour expiry; do not exceed token reuse windows.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,117 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Credly Web Service API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{authorizationToken}}",
+      "password": ""
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Badge Templates", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List badge templates.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.credly.com/v1/organizations/:organization_id/badge_templates?page=1", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "page", "value": "1", "type": "query", "description": "Page number." }] },
+          "docs": "Returns a paginated list of the organization's badge templates. (confirmed)"
+        },
+        {
+          "info": { "name": "Create a badge template.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.credly.com/v1/organizations/:organization_id/badge_templates", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }], "body": { "type": "json", "data": "{\n  \"name\": \"Example Certification\",\n  \"description\": \"Awarded for completing the example program.\"\n}" } },
+          "docs": "Creates a new badge template for the organization. (modeled)"
+        },
+        {
+          "info": { "name": "Retrieve a badge template.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.credly.com/v1/organizations/:organization_id/badge_templates/:id", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "id", "value": "", "type": "path", "description": "The badge template ID." }] },
+          "docs": "Returns a single badge template by ID. (modeled)"
+        },
+        {
+          "info": { "name": "Update a badge template.", "type": "http" },
+          "http": { "method": "PUT", "url": "https://api.credly.com/v1/organizations/:organization_id/badge_templates/:id", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "id", "value": "", "type": "path", "description": "The badge template ID." }], "body": { "type": "json", "data": "{\n  \"description\": \"Updated description.\"\n}" } },
+          "docs": "Updates an existing badge template. (modeled)"
+        },
+        {
+          "info": { "name": "Delete a badge template.", "type": "http" },
+          "http": { "method": "DELETE", "url": "https://api.credly.com/v1/organizations/:organization_id/badge_templates/:id", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "id", "value": "", "type": "path", "description": "The badge template ID." }] },
+          "docs": "Deletes a badge template. (modeled)"
+        }
+      ]
+    },
+    {
+      "info": { "name": "Issued Badges", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List issued badges.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.credly.com/v1/organizations/:organization_id/badges?page=1", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "page", "value": "1", "type": "query", "description": "Page number." }] },
+          "docs": "Returns a paginated list of issued badges for the organization, with filtering and sorting. (confirmed)"
+        },
+        {
+          "info": { "name": "Issue a badge.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.credly.com/v1/organizations/:organization_id/badges", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }], "body": { "type": "json", "data": "{\n  \"recipient_email\": \"user@example.com\",\n  \"badge_template_id\": \"\",\n  \"issued_to_first_name\": \"Ada\",\n  \"issued_to_last_name\": \"Lovelace\",\n  \"locale\": \"en\"\n}" } },
+          "docs": "Issues a badge to a recipient from a badge template. Requires recipient_email and badge_template_id. (confirmed)"
+        },
+        {
+          "info": { "name": "Retrieve an issued badge.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.credly.com/v1/organizations/:organization_id/badges/:id", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "id", "value": "", "type": "path", "description": "The issued badge ID." }] },
+          "docs": "Returns a single issued badge by ID. (modeled)"
+        },
+        {
+          "info": { "name": "Replace an issued badge.", "type": "http" },
+          "http": { "method": "PUT", "url": "https://api.credly.com/v1/organizations/:organization_id/badges/:id/replace", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "id", "value": "", "type": "path", "description": "The issued badge ID." }], "body": { "type": "json", "data": "{\n  \"recipient_email\": \"user@example.com\",\n  \"badge_template_id\": \"\"\n}" } },
+          "docs": "Replaces an issued badge, superseding the original. (modeled)"
+        },
+        {
+          "info": { "name": "Revoke an issued badge.", "type": "http" },
+          "http": { "method": "PUT", "url": "https://api.credly.com/v1/organizations/:organization_id/badges/:id/revoke", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "id", "value": "", "type": "path", "description": "The issued badge ID." }], "body": { "type": "json", "data": "{\n  \"reason\": \"Issued in error.\"\n}" } },
+          "docs": "Revokes an issued badge with an optional reason. A replaced badge cannot be revoked. (confirmed)"
+        }
+      ]
+    },
+    {
+      "info": { "name": "Organizations", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Retrieve organization details.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.credly.com/v1/organizations/:organization_id", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }] },
+          "docs": "Returns details for the organization. (modeled)"
+        },
+        {
+          "info": { "name": "List employees.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.credly.com/v1/organizations/:organization_id/employees?page=1", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "page", "value": "1", "type": "query", "description": "Page number." }] },
+          "docs": "Returns data about all employees. Requires the workforce scope or read permission. (confirmed)"
+        }
+      ]
+    },
+    {
+      "info": { "name": "Events", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List organization events.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.credly.com/v1/organizations/:organization_id/events?page=1", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "page", "value": "1", "type": "query", "description": "Page number." }] },
+          "docs": "Returns a paginated feed of events (badge.created, badge.deleted, badge.privacy.changed, badge.state.changed), at most 50 per page. Same events delivered via webhooks. (confirmed)"
+        }
+      ]
+    },
+    {
+      "info": { "name": "OBI Recipients", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Retrieve OBI issuer profile.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.credly.com/v1/obi/v2/issuers/:organization_id", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }] },
+          "docs": "Returns the organization as a public OBI issuer profile. (modeled)"
+        },
+        {
+          "info": { "name": "Retrieve OBI badge assertion.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.credly.com/v1/obi/v2/organizations/:organization_id/badge_assertions/:id", "params": [{ "name": "organization_id", "value": "", "type": "path", "description": "The issuing organization ID." }, { "name": "id", "value": "", "type": "path", "description": "The issued badge / assertion ID." }] },
+          "docs": "Returns a recipient's issued badge as a public Open Badges assertion for verification. (modeled)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

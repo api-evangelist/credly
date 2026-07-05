@@ -1,0 +1,110 @@
+aid: credly
+name: Credly
+review:
+  question: Does Credly expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-05'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Credly's public developer surface is the
+    Web Service API - a request/response REST API over HTTPS (base
+    https://api.credly.com/v1, sandbox https://sandbox-api.credly.com/v1). The
+    only push-style delivery Credly offers is outbound webhooks: Credly POSTs a
+    JSON object to a customer-configured HTTPS URL when an event occurs
+    (badge.created, badge.deleted, badge.privacy.changed, badge.state.changed).
+    Webhooks are server-to-endpoint HTTP callbacks, not a WebSocket transport,
+    and consumers can equivalently poll GET
+    /v1/organizations/{organization_id}/events. There is no bidirectional or
+    server-push WebSocket (ws:// or wss://) endpoint on Credly's own API to model.
+findings:
+  summary: |
+    Credly does not publish a documented public WebSocket API. Credly is a
+    digital credential / Open Badge platform owned by Pearson (acquired in 2022,
+    ~$200M). Its public Web Service API is request/response REST over HTTPS, with
+    a production base of https://api.credly.com/v1 and a sandbox at
+    https://sandbox-api.credly.com/v1. Authentication is HTTP Basic (the
+    organization's authorization_token as the username with a blank password) or
+    OAuth 2.0 client_credentials (2-hour Bearer tokens from
+    https://api.credly.com/oauth/token). Real-time notifications are delivered by
+    outbound webhooks (HTTPS POST callbacks) and are also readable via a
+    paginated events feed. No realtime, bidirectional, or streaming WebSocket
+    endpoint is documented anywhere on Credly's API.
+  ownership: |
+    Credly is owned by Pearson plc, which acquired it in 2022 for a total value
+    of approximately $200M and placed it in Pearson's Workforce Skills division.
+    More than 2,000 organizations issue credentials through the platform.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.credly.com/v1
+      documented: true
+      note: Web Service API. Sandbox base is https://sandbox-api.credly.com/v1.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Credly POSTs a JSON event object to a configured HTTPS URL. Server-to-endpoint HTTP callback, not WebSocket.
+    - protocol: HTTP Poll
+      scheme: https
+      documented: true
+      note: GET /v1/organizations/{organization_id}/events returns the same events (<=50 per page) for polling instead of webhooks.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Credly's Web Service API as of the review date.
+  endpointsConfirmedRest:
+    - GET https://api.credly.com/v1/organizations/{organization_id}/badge_templates
+    - GET https://api.credly.com/v1/organizations/{organization_id}/badges
+    - POST https://api.credly.com/v1/organizations/{organization_id}/badges
+    - PUT https://api.credly.com/v1/organizations/{organization_id}/badges/{badge_id}/revoke
+    - GET https://api.credly.com/v1/organizations/{organization_id}/events
+    - GET https://api.credly.com/v1/organizations/{organization_id}/employees
+  endpointsModeledRest:
+    - POST https://api.credly.com/v1/organizations/{organization_id}/badge_templates
+    - GET https://api.credly.com/v1/organizations/{organization_id}/badge_templates/{id}
+    - PUT https://api.credly.com/v1/organizations/{organization_id}/badge_templates/{id}
+    - DELETE https://api.credly.com/v1/organizations/{organization_id}/badge_templates/{id}
+    - GET https://api.credly.com/v1/organizations/{organization_id}/badges/{id}
+    - PUT https://api.credly.com/v1/organizations/{organization_id}/badges/{id}/replace
+    - GET https://api.credly.com/v1/organizations/{organization_id}
+    - GET https://api.credly.com/v1/obi/v2/issuers/{organization_id}
+    - GET https://api.credly.com/v1/obi/v2/organizations/{organization_id}/badge_assertions/{id}
+  webhookEvents:
+    - badge.created
+    - badge.deleted
+    - badge.privacy.changed
+    - badge.state.changed
+sources:
+  - url: https://docs.credly.com/browse/docs/getting-started
+    type: Documentation
+    note: Web Service API introduction; Authorization Tokens and OAuth 2.0.
+  - url: https://docs.credly.com/browse/docs/authentication-methods
+    type: Documentation
+    note: HTTP Basic (authorization_token as username, blank password) and OAuth 2.0 client_credentials at https://api.credly.com/oauth/token; base https://api.credly.com/v1.
+  - url: https://www.credly.com/docs/badge_templates
+    type: APIReference
+    note: Badge templates under /v1/organizations/{organization_id}/badge_templates; paginated with metadata.
+  - url: https://www.credly.com/docs/issued_badges
+    type: APIReference
+    note: Issued badges under /v1/organizations/{organization_id}/badges; issue with recipient_email + badge_template_id; revoke via PUT .../revoke.
+  - url: https://docs.credly.com/browse/reference/get_v1-organizations-organization-id-events
+    type: APIReference
+    note: Events feed; badge.* event types; <=50 results per page with page parameter.
+  - url: https://docs.credly.com/browse/reference/get_v1-organizations-organization-id-employees
+    type: APIReference
+    note: Employees directory; requires workforce scope or read permission.
+  - url: https://www.credly.com/docs/webhooks
+    type: Documentation
+    note: Webhooks deliver JSON via HTTPS POST callbacks. No WebSocket.
+  - url: https://plc.pearson.com/en-GB/news-and-insights/news/pearson-acquires-digital-credentialing-leader-credly
+    type: PressRelease
+    note: Pearson acquired Credly in 2022 (~$200M total value).
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Credly's own public API is
+    request/response REST (Web Service API) with event delivery via outbound
+    webhooks (HTTPS POST) and a pollable events feed. No AsyncAPI document was
+    created because there is no server-push WebSocket transport on Credly's own
+    API to model.

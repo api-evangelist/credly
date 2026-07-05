@@ -1,0 +1,692 @@
+openapi: 3.0.3
+info:
+  title: Credly Web Service API
+  description: >-
+    The Credly Web Service API lets an issuing organization manage verifiable
+    digital credentials (Open Badges) on the Credly platform, owned by Pearson.
+    Organizations create and manage badge templates, issue and revoke badges to
+    recipients, read organization and employee data, pull an events feed, and
+    expose recipient credentials through Open Badges Infrastructure (OBI)
+    endpoints. All calls are scoped to an organization via the organization_id
+    path parameter.
+
+
+    Authentication is either HTTP Basic - the organization's authorization_token
+    as the username with a blank password (Base64-encoded in the Authorization
+    header) - or OAuth 2.0 using the client_credentials grant against
+    https://api.credly.com/oauth/token, sending the resulting Bearer token.
+
+
+    Real-time notifications are delivered as outbound webhooks (Credly POSTs a
+    JSON object to a configured HTTPS URL). There is no public WebSocket API.
+
+
+    Endpoints marked "confirmed" were verified against Credly's live developer
+    documentation; endpoints marked "modeled" follow Credly's documented,
+    consistent /v1/organizations/{organization_id}/... REST conventions and
+    should be reconciled against the current API reference before production use.
+  version: '1.0'
+  contact:
+    name: Credly (Pearson)
+    url: https://credly.com
+servers:
+  - url: https://api.credly.com/v1
+    description: Production
+  - url: https://sandbox-api.credly.com/v1
+    description: Sandbox
+security:
+  - basicAuth: []
+  - oauth2: []
+tags:
+  - name: Badge Templates
+    description: Reusable credential designs badges are issued against.
+  - name: Issued Badges
+    description: Badges issued to recipients from a badge template.
+  - name: Organizations
+    description: Organization details and employees directory.
+  - name: Events
+    description: Organization event feed (mirrors webhook events).
+  - name: OBI Recipients
+    description: Open Badges Infrastructure endpoints for public verification.
+paths:
+  /organizations/{organization_id}/badge_templates:
+    get:
+      operationId: listBadgeTemplates
+      tags:
+        - Badge Templates
+      summary: List badge templates
+      description: >-
+        Returns a paginated list of the organization's badge templates.
+        (confirmed)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Page'
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter expression, e.g. state::active.
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paginated list of badge templates.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadgeTemplateList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createBadgeTemplate
+      tags:
+        - Badge Templates
+      summary: Create a badge template
+      description: >-
+        Creates a new badge template for the organization. (modeled)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BadgeTemplateInput'
+      responses:
+        '200':
+          description: The created badge template.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadgeTemplateEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+  /organizations/{organization_id}/badge_templates/{id}:
+    get:
+      operationId: getBadgeTemplate
+      tags:
+        - Badge Templates
+      summary: Retrieve a badge template
+      description: Returns a single badge template by ID. (modeled)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: The badge template.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadgeTemplateEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateBadgeTemplate
+      tags:
+        - Badge Templates
+      summary: Update a badge template
+      description: Updates an existing badge template. (modeled)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BadgeTemplateInput'
+      responses:
+        '200':
+          description: The updated badge template.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadgeTemplateEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteBadgeTemplate
+      tags:
+        - Badge Templates
+      summary: Delete a badge template
+      description: Deletes a badge template. (modeled)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: The badge template was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /organizations/{organization_id}/badges:
+    get:
+      operationId: listIssuedBadges
+      tags:
+        - Issued Badges
+      summary: List issued badges
+      description: >-
+        Returns a paginated list of issued badges for the organization. Supports
+        filtering (for example by recipient_email) and sorting. (confirmed)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Page'
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter expression, e.g. recipient_email::user@example.com.
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paginated list of issued badges.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuedBadgeList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: issueBadge
+      tags:
+        - Issued Badges
+      summary: Issue a badge
+      description: >-
+        Issues a badge to a recipient from a badge template. Requires
+        recipient_email and badge_template_id. (confirmed)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueBadgeInput'
+      responses:
+        '200':
+          description: The issued badge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuedBadgeEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+  /organizations/{organization_id}/badges/{id}:
+    get:
+      operationId: getIssuedBadge
+      tags:
+        - Issued Badges
+      summary: Retrieve an issued badge
+      description: Returns a single issued badge by ID. (modeled)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: The issued badge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuedBadgeEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /organizations/{organization_id}/badges/{id}/replace:
+    put:
+      operationId: replaceIssuedBadge
+      tags:
+        - Issued Badges
+      summary: Replace an issued badge
+      description: >-
+        Replaces an issued badge (for example, to correct recipient details or
+        move it to a different template), superseding the original. (modeled)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueBadgeInput'
+      responses:
+        '200':
+          description: The replacement issued badge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuedBadgeEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+  /organizations/{organization_id}/badges/{id}/revoke:
+    put:
+      operationId: revokeIssuedBadge
+      tags:
+        - Issued Badges
+      summary: Revoke an issued badge
+      description: >-
+        Revokes an issued badge with an optional reason. A badge that has been
+        replaced cannot be revoked. (confirmed)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: Reason the badge is being revoked.
+                suppress_revoke_notification_email:
+                  type: boolean
+      responses:
+        '200':
+          description: The revoked issued badge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuedBadgeEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+  /organizations/{organization_id}:
+    get:
+      operationId: getOrganization
+      tags:
+        - Organizations
+      summary: Retrieve organization details
+      description: Returns details for the organization. (modeled)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: The organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /organizations/{organization_id}/employees:
+    get:
+      operationId: listEmployees
+      tags:
+        - Organizations
+      summary: List employees
+      description: >-
+        Returns data about all employees for the organization. Requires the
+        workforce scope or read permission. (confirmed)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of employees.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /organizations/{organization_id}/events:
+    get:
+      operationId: listEvents
+      tags:
+        - Events
+      summary: List organization events
+      description: >-
+        Returns a paginated feed of organization events. Event types include
+        badge.created, badge.deleted, badge.privacy.changed, and
+        badge.state.changed. Returns at most 50 results per page; use the page
+        parameter for more. These are the same events delivered via webhooks.
+        (confirmed)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /obi/v2/issuers/{organization_id}:
+    get:
+      operationId: getObiIssuer
+      tags:
+        - OBI Recipients
+      summary: Retrieve OBI issuer profile
+      description: >-
+        Returns the organization as a public Open Badges Infrastructure (OBI)
+        issuer profile. (modeled)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: The OBI issuer profile.
+          content:
+            application/json:
+              schema:
+                type: object
+  /obi/v2/organizations/{organization_id}/badge_assertions/{id}:
+    get:
+      operationId: getObiBadgeAssertion
+      tags:
+        - OBI Recipients
+      summary: Retrieve OBI badge assertion
+      description: >-
+        Returns a recipient's issued badge as a public, standards-compliant Open
+        Badges assertion for third-party verification. (modeled)
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: The OBI badge assertion.
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: >-
+        HTTP Basic Authentication using the organization's authorization_token
+        as the username and a blank password.
+    oauth2:
+      type: oauth2
+      description: >-
+        OAuth 2.0 client_credentials grant. Tokens are short-lived (2 hours) and
+        sent as a Bearer token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.credly.com/oauth/token
+          scopes:
+            read: Read access to organization resources.
+            issue: Issue and manage badges.
+            workforce: Access to employee/workforce data.
+  parameters:
+    OrganizationId:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the issuing organization.
+      schema:
+        type: string
+    Id:
+      name: id
+      in: path
+      required: true
+      description: The resource ID.
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      required: false
+      description: The page number of paginated results.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+  responses:
+    Unauthorized:
+      description: Authentication failed or was not provided.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: The request was well-formed but could not be processed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Metadata:
+      type: object
+      description: Pagination and response metadata.
+      properties:
+        count:
+          type: integer
+        current_page:
+          type: integer
+        total_count:
+          type: integer
+        total_pages:
+          type: integer
+        per:
+          type: integer
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              field:
+                type: string
+    BadgeTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        image_url:
+          type: string
+        state:
+          type: string
+          enum: [active, archived, draft]
+        skills:
+          type: array
+          items:
+            type: object
+        created_at:
+          type: string
+          format: date-time
+    BadgeTemplateInput:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+          description: Base64-encoded image or image URL.
+        skills:
+          type: array
+          items:
+            type: string
+        badge_template_activity_type:
+          type: string
+    BadgeTemplateEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BadgeTemplate'
+    BadgeTemplateList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BadgeTemplate'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    IssuedBadge:
+      type: object
+      properties:
+        id:
+          type: string
+        state:
+          type: string
+          enum: [accepted, pending, rejected, revoked]
+        recipient_email:
+          type: string
+        issued_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        issuer_earner_id:
+          type: string
+          nullable: true
+        badge_template:
+          $ref: '#/components/schemas/BadgeTemplate'
+    IssueBadgeInput:
+      type: object
+      required:
+        - recipient_email
+        - badge_template_id
+      properties:
+        recipient_email:
+          type: string
+          format: email
+        badge_template_id:
+          type: string
+        issued_at:
+          type: string
+          format: date-time
+        issued_to_first_name:
+          type: string
+        issued_to_last_name:
+          type: string
+        issuer_earner_id:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        locale:
+          type: string
+          enum: [en, fr, de, ko, ja, zh-CN, pt, es-ES, es-US, fr-CA, pt-BR]
+        suppress_badge_notification_email:
+          type: boolean
+    IssuedBadgeEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/IssuedBadge'
+    IssuedBadgeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssuedBadge'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        photo_url:
+          type: string
+    OrganizationEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Organization'
+    Employee:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    EmployeeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        event_type:
+          type: string
+          enum:
+            - badge.created
+            - badge.deleted
+            - badge.privacy.changed
+            - badge.state.changed
+        occurred_at:
+          type: string
+          format: date-time
+        data:
+          type: object
+    EventList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        metadata:
+          $ref: '#/components/schemas/Metadata'

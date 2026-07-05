@@ -1,0 +1,95 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Credly
+providerId: credly
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Digital Credentials
+- Open Badges
+- Badging
+- Certifications
+- Pearson
+- Plans
+description: >-
+  Credly (a Pearson company) does not publish self-serve, list-price API plans.
+  Credly is sold as a B2B digital credentialing platform to issuing
+  organizations under a contract with Credly/Pearson sales, typically priced on
+  the volume of credentials (badges) issued and the platform features required.
+  The Web Service API and sandbox are entitlements of an organization's Credly
+  subscription - API access is granted to paying issuing organizations rather
+  than sold as a standalone metered API product. Recipients (badge earners)
+  accept and share badges for free. Exact per-badge, credit, or tier pricing is
+  not published and must be obtained from Credly sales.
+notes: >-
+  Pricing is contact-sales and volume-based on credentials issued; there is no
+  public price sheet. Verify current commercial terms, credential volume bands,
+  and any sandbox/trial entitlements directly with Credly (Pearson) during
+  reconciliation.
+sources:
+- https://credly.com
+- https://docs.credly.com/browse/docs/getting-started
+- https://plc.pearson.com/en-GB/news-and-insights/news/pearson-acquires-digital-credentialing-leader-credly
+plans:
+- id: credly-issuer-subscription
+  name: Issuer Subscription (Contact Sales)
+  type: enterprise
+  description: >-
+    B2B subscription for an issuing organization, negotiated with Credly/Pearson
+    sales and priced primarily on annual credential (badge) issuance volume.
+    Includes access to the credentialing platform, badge template management,
+    badge issuing/revocation, analytics, and the Web Service API plus sandbox.
+  entries:
+  - label: Annual Credential Volume
+    name: credential_volume
+    type: usage
+    metric: badges
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales (volume-based on credentials issued)
+    userMultiplied: false
+  - label: Platform and API Access
+    name: platform_access
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Badge Template Management
+  - name: Badge Issuing and Revocation
+  - name: Web Service API and Sandbox
+  - name: Webhooks and Events
+  - name: Analytics and Reporting
+- id: credly-recipient
+  name: Recipient (Badge Earner)
+  type: free
+  description: >-
+    Badge earners create a Credly profile and accept, manage, and share their
+    verifiable badges at no cost. Recipients do not use the issuer Web Service
+    API; their badges are publicly verifiable via OBI endpoints.
+  entries:
+  - label: Accept and Share Badges
+    name: recipient_badges
+    type: usage
+    metric: badges
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: free
+    userMultiplied: false
+  elements:
+  - name: Badge Wallet
+  - name: Public Verification (OBI)
+  - name: Social Sharing
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

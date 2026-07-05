@@ -1,0 +1,186 @@
+{
+  "info": {
+    "name": "Credly Web Service API",
+    "description": "Issue, manage, and verify digital credentials (Open Badges) on the Credly platform, owned by Pearson. Base URL: https://api.credly.com/v1 (production) or https://sandbox-api.credly.com/v1 (sandbox). Authentication is HTTP Basic (the organization's authorization_token as the username with a blank password) or OAuth 2.0 client_credentials. All operations are scoped by organization_id.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      { "key": "username", "value": "{{authorizationToken}}", "type": "string" },
+      { "key": "password", "value": "", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.credly.com/v1", "type": "string" },
+    { "key": "authorizationToken", "value": "", "type": "string" },
+    { "key": "organization_id", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Badge Templates",
+      "item": [
+        {
+          "name": "List badge templates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/badge_templates?page=1", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "badge_templates"], "query": [{ "key": "page", "value": "1" }] },
+            "description": "Returns a paginated list of the organization's badge templates. (confirmed)"
+          }
+        },
+        {
+          "name": "Create a badge template",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Example Certification\",\n  \"description\": \"Awarded for completing the example program.\",\n  \"skills\": [\"APIs\", \"Governance\"]\n}" },
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/badge_templates", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "badge_templates"] },
+            "description": "Creates a new badge template for the organization. (modeled)"
+          }
+        },
+        {
+          "name": "Retrieve a badge template",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/badge_templates/:id", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "badge_templates", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Returns a single badge template by ID. (modeled)"
+          }
+        },
+        {
+          "name": "Update a badge template",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"description\": \"Updated description.\"\n}" },
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/badge_templates/:id", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "badge_templates", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Updates an existing badge template. (modeled)"
+          }
+        },
+        {
+          "name": "Delete a badge template",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/badge_templates/:id", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "badge_templates", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Deletes a badge template. (modeled)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Issued Badges",
+      "item": [
+        {
+          "name": "List issued badges",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/badges?page=1", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "badges"], "query": [{ "key": "page", "value": "1" }, { "key": "filter", "value": "recipient_email::user@example.com", "disabled": true }] },
+            "description": "Returns a paginated list of issued badges for the organization, with filtering and sorting. (confirmed)"
+          }
+        },
+        {
+          "name": "Issue a badge",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"recipient_email\": \"user@example.com\",\n  \"badge_template_id\": \"\",\n  \"issued_to_first_name\": \"Ada\",\n  \"issued_to_last_name\": \"Lovelace\",\n  \"issuer_earner_id\": \"internal-123\",\n  \"locale\": \"en\",\n  \"suppress_badge_notification_email\": false\n}" },
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/badges", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "badges"] },
+            "description": "Issues a badge to a recipient from a badge template. Requires recipient_email and badge_template_id. (confirmed)"
+          }
+        },
+        {
+          "name": "Retrieve an issued badge",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/badges/:id", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "badges", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Returns a single issued badge by ID. (modeled)"
+          }
+        },
+        {
+          "name": "Replace an issued badge",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"recipient_email\": \"user@example.com\",\n  \"badge_template_id\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/badges/:id/replace", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "badges", ":id", "replace"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Replaces an issued badge, superseding the original. (modeled)"
+          }
+        },
+        {
+          "name": "Revoke an issued badge",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Issued in error.\",\n  \"suppress_revoke_notification_email\": false\n}" },
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/badges/:id/revoke", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "badges", ":id", "revoke"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Revokes an issued badge with an optional reason. A replaced badge cannot be revoked. (confirmed)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Organizations",
+      "item": [
+        {
+          "name": "Retrieve organization details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}"] },
+            "description": "Returns details for the organization. (modeled)"
+          }
+        },
+        {
+          "name": "List employees",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/employees?page=1", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "employees"], "query": [{ "key": "page", "value": "1" }] },
+            "description": "Returns data about all employees. Requires the workforce scope or read permission. (confirmed)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "List organization events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{organization_id}}/events?page=1", "host": ["{{baseUrl}}"], "path": ["organizations", "{{organization_id}}", "events"], "query": [{ "key": "page", "value": "1" }] },
+            "description": "Returns a paginated feed of events (badge.created, badge.deleted, badge.privacy.changed, badge.state.changed), at most 50 per page. Same events delivered via webhooks. (confirmed)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "OBI Recipients",
+      "item": [
+        {
+          "name": "Retrieve OBI issuer profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/obi/v2/issuers/{{organization_id}}", "host": ["{{baseUrl}}"], "path": ["obi", "v2", "issuers", "{{organization_id}}"] },
+            "description": "Returns the organization as a public OBI issuer profile. (modeled)"
+          }
+        },
+        {
+          "name": "Retrieve OBI badge assertion",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/obi/v2/organizations/{{organization_id}}/badge_assertions/:id", "host": ["{{baseUrl}}"], "path": ["obi", "v2", "organizations", "{{organization_id}}", "badge_assertions", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Returns a recipient's issued badge as a public Open Badges assertion for verification. (modeled)"
+          }
+        }
+      ]
+    }
+  ]
+}
