@@ -142,6 +142,10 @@ apis:
     badge class, and assertion) so third parties can verify a credential a recipient
     has earned.
 common:
+- type: DomainSecurity
+  url: security/credly-domain-security.yml
+- type: Authentication
+  url: authentication/credly-authentication.yml
 - type: OAuthScopes
   url: scopes/credly-scopes.yml
 - type: LinkedIn
