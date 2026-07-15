@@ -142,6 +142,8 @@ apis:
     badge class, and assertion) so third parties can verify a credential a recipient
     has earned.
 common:
+- type: AgenticAccess
+  url: agentic-access/credly-agentic-access.yml
 - type: DomainSecurity
   url: security/credly-domain-security.yml
 - type: Authentication

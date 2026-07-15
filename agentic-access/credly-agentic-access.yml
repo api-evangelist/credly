@@ -1,0 +1,203 @@
+generated: '2026-07-15'
+method: generated
+source: openapi/credly-openapi.yml
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 15
+  by_action_class:
+    connected: 9
+    acting: 6
+  by_consequence:
+    read: 9
+    write: 5
+    safety-critical: 1
+  human_in_the_loop_required: 1
+operations:
+- path: /organizations/{organization_id}/badge_templates
+  method: get
+  operationId: listBadgeTemplates
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /organizations/{organization_id}/badge_templates
+  method: post
+  operationId: createBadgeTemplate
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /organizations/{organization_id}/badge_templates/{id}
+  method: get
+  operationId: getBadgeTemplate
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /organizations/{organization_id}/badge_templates/{id}
+  method: put
+  operationId: updateBadgeTemplate
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /organizations/{organization_id}/badge_templates/{id}
+  method: delete
+  operationId: deleteBadgeTemplate
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /organizations/{organization_id}/badges
+  method: get
+  operationId: listIssuedBadges
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /organizations/{organization_id}/badges
+  method: post
+  operationId: issueBadge
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /organizations/{organization_id}/badges/{id}
+  method: get
+  operationId: getIssuedBadge
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /organizations/{organization_id}/badges/{id}/replace
+  method: put
+  operationId: replaceIssuedBadge
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /organizations/{organization_id}/badges/{id}/revoke
+  method: put
+  operationId: revokeIssuedBadge
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /organizations/{organization_id}
+  method: get
+  operationId: getOrganization
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /organizations/{organization_id}/employees
+  method: get
+  operationId: listEmployees
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /organizations/{organization_id}/events
+  method: get
+  operationId: listEvents
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /obi/v2/issuers/{organization_id}
+  method: get
+  operationId: getObiIssuer
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /obi/v2/organizations/{organization_id}/badge_assertions/{id}
+  method: get
+  operationId: getObiBadgeAssertion
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
