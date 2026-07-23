@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  title: Credly Web Service Badge Templates Events API
+  description: 'The Credly Web Service API lets an issuing organization manage verifiable digital credentials (Open Badges) on the Credly platform, owned by Pearson. Organizations create and manage badge templates, issue and revoke badges to recipients, read organization and employee data, pull an events feed, and expose recipient credentials through Open Badges Infrastructure (OBI) endpoints. All calls are scoped to an organization via the organization_id path parameter.
+
+
+    Authentication is either HTTP Basic - the organization''s authorization_token as the username with a blank password (Base64-encoded in the Authorization header) - or OAuth 2.0 using the client_credentials grant against https://api.credly.com/oauth/token, sending the resulting Bearer token.
+
+
+    Real-time notifications are delivered as outbound webhooks (Credly POSTs a JSON object to a configured HTTPS URL). There is no public WebSocket API.
+
+
+    Endpoints marked "confirmed" were verified against Credly''s live developer documentation; endpoints marked "modeled" follow Credly''s documented, consistent /v1/organizations/{organization_id}/... REST conventions and should be reconciled against the current API reference before production use.'
+  version: '1.0'
+  contact:
+    name: Credly (Pearson)
+    url: https://credly.com
+servers:
+- url: https://api.credly.com/v1
+  description: Production
+- url: https://sandbox-api.credly.com/v1
+  description: Sandbox
+security:
+- basicAuth: []
+- oauth2: []
+tags:
+- name: Events
+  description: Organization event feed (mirrors webhook events).
+paths:
+  /organizations/{organization_id}/events:
+    get:
+      operationId: listEvents
+      tags:
+      - Events
+      summary: List organization events
+      description: Returns a paginated feed of organization events. Event types include badge.created, badge.deleted, badge.privacy.changed, and badge.state.changed. Returns at most 50 results per page; use the page parameter for more. These are the same events delivered via webhooks. (confirmed)
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Metadata:
+      type: object
+      description: Pagination and response metadata.
+      properties:
+        count:
+          type: integer
+        current_page:
+          type: integer
+        total_count:
+          type: integer
+        total_pages:
+          type: integer
+        per:
+          type: integer
+    EventList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              field:
+                type: string
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        event_type:
+          type: string
+          enum:
+          - badge.created
+          - badge.deleted
+          - badge.privacy.changed
+          - badge.state.changed
+        occurred_at:
+          type: string
+          format: date-time
+        data:
+          type: object
+  responses:
+    Unauthorized:
+      description: Authentication failed or was not provided.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    OrganizationId:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the issuing organization.
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      required: false
+      description: The page number of paginated results.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication using the organization's authorization_token as the username and a blank password.
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 client_credentials grant. Tokens are short-lived (2 hours) and sent as a Bearer token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.credly.com/oauth/token
+          scopes:
+            read: Read access to organization resources.
+            issue: Issue and manage badges.
+            workforce: Access to employee/workforce data.

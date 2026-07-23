@@ -1,0 +1,93 @@
+openapi: 3.0.3
+info:
+  title: Credly Web Service Badge Templates OBI Recipients API
+  description: 'The Credly Web Service API lets an issuing organization manage verifiable digital credentials (Open Badges) on the Credly platform, owned by Pearson. Organizations create and manage badge templates, issue and revoke badges to recipients, read organization and employee data, pull an events feed, and expose recipient credentials through Open Badges Infrastructure (OBI) endpoints. All calls are scoped to an organization via the organization_id path parameter.
+
+
+    Authentication is either HTTP Basic - the organization''s authorization_token as the username with a blank password (Base64-encoded in the Authorization header) - or OAuth 2.0 using the client_credentials grant against https://api.credly.com/oauth/token, sending the resulting Bearer token.
+
+
+    Real-time notifications are delivered as outbound webhooks (Credly POSTs a JSON object to a configured HTTPS URL). There is no public WebSocket API.
+
+
+    Endpoints marked "confirmed" were verified against Credly''s live developer documentation; endpoints marked "modeled" follow Credly''s documented, consistent /v1/organizations/{organization_id}/... REST conventions and should be reconciled against the current API reference before production use.'
+  version: '1.0'
+  contact:
+    name: Credly (Pearson)
+    url: https://credly.com
+servers:
+- url: https://api.credly.com/v1
+  description: Production
+- url: https://sandbox-api.credly.com/v1
+  description: Sandbox
+security:
+- basicAuth: []
+- oauth2: []
+tags:
+- name: OBI Recipients
+  description: Open Badges Infrastructure endpoints for public verification.
+paths:
+  /obi/v2/issuers/{organization_id}:
+    get:
+      operationId: getObiIssuer
+      tags:
+      - OBI Recipients
+      summary: Retrieve OBI issuer profile
+      description: Returns the organization as a public Open Badges Infrastructure (OBI) issuer profile. (modeled)
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: The OBI issuer profile.
+          content:
+            application/json:
+              schema:
+                type: object
+  /obi/v2/organizations/{organization_id}/badge_assertions/{id}:
+    get:
+      operationId: getObiBadgeAssertion
+      tags:
+      - OBI Recipients
+      summary: Retrieve OBI badge assertion
+      description: Returns a recipient's issued badge as a public, standards-compliant Open Badges assertion for third-party verification. (modeled)
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: The OBI badge assertion.
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  parameters:
+    OrganizationId:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the issuing organization.
+      schema:
+        type: string
+    Id:
+      name: id
+      in: path
+      required: true
+      description: The resource ID.
+      schema:
+        type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication using the organization's authorization_token as the username and a blank password.
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 client_credentials grant. Tokens are short-lived (2 hours) and sent as a Bearer token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.credly.com/oauth/token
+          scopes:
+            read: Read access to organization resources.
+            issue: Issue and manage badges.
+            workforce: Access to employee/workforce data.

@@ -1,0 +1,177 @@
+openapi: 3.0.3
+info:
+  title: Credly Web Service Badge Templates Organizations API
+  description: 'The Credly Web Service API lets an issuing organization manage verifiable digital credentials (Open Badges) on the Credly platform, owned by Pearson. Organizations create and manage badge templates, issue and revoke badges to recipients, read organization and employee data, pull an events feed, and expose recipient credentials through Open Badges Infrastructure (OBI) endpoints. All calls are scoped to an organization via the organization_id path parameter.
+
+
+    Authentication is either HTTP Basic - the organization''s authorization_token as the username with a blank password (Base64-encoded in the Authorization header) - or OAuth 2.0 using the client_credentials grant against https://api.credly.com/oauth/token, sending the resulting Bearer token.
+
+
+    Real-time notifications are delivered as outbound webhooks (Credly POSTs a JSON object to a configured HTTPS URL). There is no public WebSocket API.
+
+
+    Endpoints marked "confirmed" were verified against Credly''s live developer documentation; endpoints marked "modeled" follow Credly''s documented, consistent /v1/organizations/{organization_id}/... REST conventions and should be reconciled against the current API reference before production use.'
+  version: '1.0'
+  contact:
+    name: Credly (Pearson)
+    url: https://credly.com
+servers:
+- url: https://api.credly.com/v1
+  description: Production
+- url: https://sandbox-api.credly.com/v1
+  description: Sandbox
+security:
+- basicAuth: []
+- oauth2: []
+tags:
+- name: Organizations
+  description: Organization details and employees directory.
+paths:
+  /organizations/{organization_id}:
+    get:
+      operationId: getOrganization
+      tags:
+      - Organizations
+      summary: Retrieve organization details
+      description: Returns details for the organization. (modeled)
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: The organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /organizations/{organization_id}/employees:
+    get:
+      operationId: listEmployees
+      tags:
+      - Organizations
+      summary: List employees
+      description: Returns data about all employees for the organization. Requires the workforce scope or read permission. (confirmed)
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of employees.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Metadata:
+      type: object
+      description: Pagination and response metadata.
+      properties:
+        count:
+          type: integer
+        current_page:
+          type: integer
+        total_count:
+          type: integer
+        total_pages:
+          type: integer
+        per:
+          type: integer
+    OrganizationEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Organization'
+    Employee:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    EmployeeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              field:
+                type: string
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        photo_url:
+          type: string
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      description: The page number of paginated results.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    OrganizationId:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the issuing organization.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Authentication failed or was not provided.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication using the organization's authorization_token as the username and a blank password.
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 client_credentials grant. Tokens are short-lived (2 hours) and sent as a Bearer token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.credly.com/oauth/token
+          scopes:
+            read: Read access to organization resources.
+            issue: Issue and manage badges.
+            workforce: Access to employee/workforce data.
