@@ -13,7 +13,20 @@ description: Credly is a digital credential and open badge platform, owned by Pe
   username with a blank password) or OAuth 2.0 client_credentials. Real-time
   notifications are delivered via outbound webhooks (HTTPS POST callbacks), not a
   WebSocket.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: paid
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Paid · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/credly.png
 tags:
 - Digital Credentials
 - Open Badges
@@ -27,120 +40,134 @@ specificationVersion: '0.19'
 apis:
 - aid: credly:credly-badge-templates-api
   name: Credly Badge Templates API
-  tags:
-  - Badge Templates
-  - Open Badges
-  - Credentials
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  description: Reusable credential designs badges are issued against.
   humanURL: https://www.credly.com/docs/badge_templates
   baseURL: https://api.credly.com/v1
-  properties:
-  - url: https://docs.credly.com/browse/docs/getting-started
-    type: Documentation
-  - url: https://www.credly.com/docs/badge_templates
-    type: APIReference
-  - url: openapi/credly-openapi.yml
-    type: OpenAPI
-  - url: collections/credly.postman_collection.json
-    type: PostmanCollection
-  - url: collections/credly.opencollection.json
-    type: OpenCollection
-  description: List, retrieve, create, update, and delete an organization's badge
-    templates - the reusable credential designs (name, description, image, skills,
-    criteria) that badges are issued against. Templates live under
-    /v1/organizations/{organization_id}/badge_templates.
-- aid: credly:credly-issued-badges-api
-  name: Credly Issued Badges API
   tags:
-  - Issued Badges
-  - Issuing
-  - Revocation
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.credly.com/docs/issued_badges
-  baseURL: https://api.credly.com/v1
+  - Badge Templates
   properties:
-  - url: https://www.credly.com/docs/issued_badges
-    type: APIReference
-  - url: openapi/credly-openapi.yml
-    type: OpenAPI
-  - url: collections/credly.postman_collection.json
-    type: PostmanCollection
-  - url: collections/credly.opencollection.json
-    type: OpenCollection
-  description: Issue badges to recipients from a badge template, list and filter
-    issued badges, retrieve a single badge, replace a badge, and revoke a badge.
-    Issuing takes recipient_email and badge_template_id (plus optional issuer_earner_id,
-    expires_at, locale, suppress_badge_notification_email) under
-    /v1/organizations/{organization_id}/badges.
-- aid: credly:credly-organizations-api
-  name: Credly Organizations API
-  tags:
-  - Organizations
-  - Employees
-  - Account
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.credly.com/browse/reference/get_v1-organizations-organization-id-employees
-  baseURL: https://api.credly.com/v1
-  properties:
-  - url: https://docs.credly.com/browse/docs/getting-started
-    type: Documentation
-  - url: openapi/credly-openapi.yml
-    type: OpenAPI
-  - url: collections/credly.postman_collection.json
-    type: PostmanCollection
-  - url: collections/credly.opencollection.json
-    type: OpenCollection
-  description: Read organization-level data - organization details and the employees
-    directory (the workforce scope). Includes GET
-    /v1/organizations/{organization_id}/employees and organization detail lookups
-    used to scope all badge and template operations.
+  - type: OpenAPI
+    url: openapi/credly-badge-templates-api-openapi.yml
+  - type: Documentation
+    url: https://docs.credly.com/browse/docs/getting-started
+  - type: APIReference
+    url: https://www.credly.com/docs/badge_templates
+  - type: PostmanCollection
+    url: collections/credly.postman_collection.json
+  - type: OpenCollection
+    url: collections/credly.opencollection.json
+  - type: APIReference
+    url: https://www.credly.com/docs/issued_badges
+  - type: Documentation
+    url: https://www.credly.com/docs/webhooks
+  - type: APIReference
+    url: https://docs.credly.com/browse/reference/get_v1-organizations-organization-id-events
+  - type: Documentation
+    url: https://www.credly.com/docs/obi_specified_endpoints
 - aid: credly:credly-events-api
-  name: Credly Events and Webhooks API
+  name: Credly Events API
+  description: Organization event feed (mirrors webhook events).
+  humanURL: https://www.credly.com/docs/badge_templates
+  baseURL: https://api.credly.com/v1
   tags:
   - Events
-  - Webhooks
-  - Notifications
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.credly.com/docs/webhooks
-  baseURL: https://api.credly.com/v1
   properties:
-  - url: https://www.credly.com/docs/webhooks
-    type: Documentation
-  - url: https://docs.credly.com/browse/reference/get_v1-organizations-organization-id-events
-    type: APIReference
-  - url: openapi/credly-openapi.yml
-    type: OpenAPI
-  - url: collections/credly.postman_collection.json
-    type: PostmanCollection
-  - url: collections/credly.opencollection.json
-    type: OpenCollection
-  description: Pull a paginated feed of organization events (badge.created,
-    badge.deleted, badge.privacy.changed, badge.state.changed) via GET
-    /v1/organizations/{organization_id}/events, and receive the same events as
-    outbound webhook callbacks (Credly POSTs a JSON object to a configured HTTPS
-    URL). Delivery is HTTP callback, not WebSocket.
+  - type: OpenAPI
+    url: openapi/credly-events-api-openapi.yml
+  - type: Documentation
+    url: https://docs.credly.com/browse/docs/getting-started
+  - type: APIReference
+    url: https://www.credly.com/docs/badge_templates
+  - type: PostmanCollection
+    url: collections/credly.postman_collection.json
+  - type: OpenCollection
+    url: collections/credly.opencollection.json
+  - type: APIReference
+    url: https://www.credly.com/docs/issued_badges
+  - type: Documentation
+    url: https://www.credly.com/docs/webhooks
+  - type: APIReference
+    url: https://docs.credly.com/browse/reference/get_v1-organizations-organization-id-events
+  - type: Documentation
+    url: https://www.credly.com/docs/obi_specified_endpoints
+- aid: credly:credly-issued-badges-api
+  name: Credly Issued Badges API
+  description: Badges issued to recipients from a badge template.
+  humanURL: https://www.credly.com/docs/badge_templates
+  baseURL: https://api.credly.com/v1
+  tags:
+  - Issued Badges
+  properties:
+  - type: OpenAPI
+    url: openapi/credly-issued-badges-api-openapi.yml
+  - type: Documentation
+    url: https://docs.credly.com/browse/docs/getting-started
+  - type: APIReference
+    url: https://www.credly.com/docs/badge_templates
+  - type: PostmanCollection
+    url: collections/credly.postman_collection.json
+  - type: OpenCollection
+    url: collections/credly.opencollection.json
+  - type: APIReference
+    url: https://www.credly.com/docs/issued_badges
+  - type: Documentation
+    url: https://www.credly.com/docs/webhooks
+  - type: APIReference
+    url: https://docs.credly.com/browse/reference/get_v1-organizations-organization-id-events
+  - type: Documentation
+    url: https://www.credly.com/docs/obi_specified_endpoints
 - aid: credly:credly-obi-recipients-api
   name: Credly OBI Recipients API
-  tags:
-  - Recipients
-  - Open Badges Infrastructure
-  - Verification
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.credly.com/docs/obi_specified_endpoints
+  description: Open Badges Infrastructure endpoints for public verification.
+  humanURL: https://www.credly.com/docs/badge_templates
   baseURL: https://api.credly.com/v1
+  tags:
+  - OBI Recipients
   properties:
-  - url: https://www.credly.com/docs/obi_specified_endpoints
-    type: Documentation
-  - url: openapi/credly-openapi.yml
-    type: OpenAPI
-  - url: collections/credly.postman_collection.json
-    type: PostmanCollection
-  - url: collections/credly.opencollection.json
-    type: OpenCollection
-  description: Open Badges Infrastructure (OBI) specified endpoints that expose a
-    recipient's badge as a public, standards-compliant Open Badges assertion (issuer,
-    badge class, and assertion) so third parties can verify a credential a recipient
-    has earned.
+  - type: OpenAPI
+    url: openapi/credly-obi-recipients-api-openapi.yml
+  - type: Documentation
+    url: https://docs.credly.com/browse/docs/getting-started
+  - type: APIReference
+    url: https://www.credly.com/docs/badge_templates
+  - type: PostmanCollection
+    url: collections/credly.postman_collection.json
+  - type: OpenCollection
+    url: collections/credly.opencollection.json
+  - type: APIReference
+    url: https://www.credly.com/docs/issued_badges
+  - type: Documentation
+    url: https://www.credly.com/docs/webhooks
+  - type: APIReference
+    url: https://docs.credly.com/browse/reference/get_v1-organizations-organization-id-events
+  - type: Documentation
+    url: https://www.credly.com/docs/obi_specified_endpoints
+- aid: credly:credly-organizations-api
+  name: Credly Organizations API
+  description: Organization details and employees directory.
+  humanURL: https://www.credly.com/docs/badge_templates
+  baseURL: https://api.credly.com/v1
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/credly-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.credly.com/browse/docs/getting-started
+  - type: APIReference
+    url: https://www.credly.com/docs/badge_templates
+  - type: PostmanCollection
+    url: collections/credly.postman_collection.json
+  - type: OpenCollection
+    url: collections/credly.opencollection.json
+  - type: APIReference
+    url: https://www.credly.com/docs/issued_badges
+  - type: Documentation
+    url: https://www.credly.com/docs/webhooks
+  - type: APIReference
+    url: https://docs.credly.com/browse/reference/get_v1-organizations-organization-id-events
+  - type: Documentation
+    url: https://www.credly.com/docs/obi_specified_endpoints
 common:
 - type: AgenticAccess
   url: agentic-access/credly-agentic-access.yml
