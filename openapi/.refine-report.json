@@ -1,0 +1,22 @@
+{
+  "provider": "credly",
+  "sources": [
+    "credly-badge-templates-api-openapi.yml",
+    "credly-events-api-openapi.yml",
+    "credly-issued-badges-api-openapi.yml",
+    "credly-obi-recipients-api-openapi.yml",
+    "credly-organizations-api-openapi.yml"
+  ],
+  "outputs": [
+    "credly-badge-templates-api-openapi.yml",
+    "credly-events-api-openapi.yml",
+    "credly-issued-badges-api-openapi.yml",
+    "credly-obi-recipients-api-openapi.yml",
+    "credly-organizations-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
