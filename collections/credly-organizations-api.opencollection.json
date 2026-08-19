@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Credly Web Service Badge Templates Organizations API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Organizations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve organization details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.credly.com/v1/organizations/:organization_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              }
+            ]
+          },
+          "docs": "Returns details for the organization. (modeled)"
+        },
+        {
+          "info": {
+            "name": "List employees",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/employees",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number of paginated results."
+              }
+            ]
+          },
+          "docs": "Returns data about all employees for the organization. Requires the workforce scope or read permission. (confirmed)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

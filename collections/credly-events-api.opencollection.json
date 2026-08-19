@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Credly Web Service Badge Templates Events API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List organization events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/events",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number of paginated results."
+              }
+            ]
+          },
+          "docs": "Returns a paginated feed of organization events. Event types include badge.created, badge.deleted, badge.privacy.changed, and badge.state.changed. Returns at most 50 results per page; use the page parameter for more. These are the same events delivered via webhooks. (confirmed)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

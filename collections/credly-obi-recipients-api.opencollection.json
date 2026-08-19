@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Credly Web Service Badge Templates OBI Recipients API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OBI Recipients",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve OBI issuer profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.credly.com/v1/obi/v2/issuers/:organization_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              }
+            ]
+          },
+          "docs": "Returns the organization as a public Open Badges Infrastructure (OBI) issuer profile. (modeled)"
+        },
+        {
+          "info": {
+            "name": "Retrieve OBI badge assertion",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.credly.com/v1/obi/v2/organizations/:organization_id/badge_assertions/:id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource ID."
+              }
+            ]
+          },
+          "docs": "Returns a recipient's issued badge as a public, standards-compliant Open Badges assertion for third-party verification. (modeled)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

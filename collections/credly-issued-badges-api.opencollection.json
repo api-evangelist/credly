@@ -1,0 +1,167 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Credly Web Service Badge Templates Issued Badges API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Issued Badges",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List issued badges",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/badges",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number of paginated results."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Filter expression, e.g. recipient_email::user@example.com."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of issued badges for the organization. Supports filtering (for example by recipient_email) and sorting. (confirmed)"
+        },
+        {
+          "info": {
+            "name": "Issue a badge",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/badges",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Issues a badge to a recipient from a badge template. Requires recipient_email and badge_template_id. (confirmed)"
+        },
+        {
+          "info": {
+            "name": "Retrieve an issued badge",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/badges/:id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource ID."
+              }
+            ]
+          },
+          "docs": "Returns a single issued badge by ID. (modeled)"
+        },
+        {
+          "info": {
+            "name": "Replace an issued badge",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/badges/:id/replace",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replaces an issued badge (for example, to correct recipient details or move it to a different template), superseding the original. (modeled)"
+        },
+        {
+          "info": {
+            "name": "Revoke an issued badge",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/badges/:id/revoke",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Revokes an issued badge with an optional reason. A badge that has been replaced cannot be revoked. (confirmed)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

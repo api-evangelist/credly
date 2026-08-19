@@ -1,0 +1,163 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Credly Web Service Badge Templates API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Badge Templates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List badge templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/badge_templates",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number of paginated results."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Filter expression, e.g. state::active."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of the organization's badge templates. (confirmed)"
+        },
+        {
+          "info": {
+            "name": "Create a badge template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/badge_templates",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new badge template for the organization. (modeled)"
+        },
+        {
+          "info": {
+            "name": "Retrieve a badge template",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/badge_templates/:id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource ID."
+              }
+            ]
+          },
+          "docs": "Returns a single badge template by ID. (modeled)"
+        },
+        {
+          "info": {
+            "name": "Update a badge template",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/badge_templates/:id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing badge template. (modeled)"
+        },
+        {
+          "info": {
+            "name": "Delete a badge template",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.credly.com/v1/organizations/:organization_id/badge_templates/:id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the issuing organization."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource ID."
+              }
+            ]
+          },
+          "docs": "Deletes a badge template. (modeled)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

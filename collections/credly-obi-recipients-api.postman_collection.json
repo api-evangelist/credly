@@ -1,0 +1,263 @@
+{
+  "item": [
+    {
+      "id": "274ed4cc-b3e2-45d2-b2fd-8d83f600d380",
+      "name": "OBI Recipients",
+      "description": {
+        "content": "Open Badges Infrastructure endpoints for public verification.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b0afe439-d9c8-4c9b-882e-514c71700c4d",
+          "name": "Retrieve OBI issuer profile",
+          "request": {
+            "name": "Retrieve OBI issuer profile",
+            "description": {
+              "content": "Returns the organization as a public Open Badges Infrastructure (OBI) issuer profile. (modeled)",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "obi",
+                "v2",
+                "issuers",
+                ":organization_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "organization_id",
+                  "description": "(Required) The ID of the issuing organization."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7201dfcc-eda7-49ca-ab85-d1006a838ec9",
+              "name": "The OBI issuer profile.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "obi",
+                    "v2",
+                    "issuers",
+                    ":organization_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "organization_id",
+                      "description": "(Required) The ID of the issuing organization."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7f768e74-3871-491b-b7a1-efd040429893",
+          "name": "Retrieve OBI badge assertion",
+          "request": {
+            "name": "Retrieve OBI badge assertion",
+            "description": {
+              "content": "Returns a recipient's issued badge as a public, standards-compliant Open Badges assertion for third-party verification. (modeled)",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "obi",
+                "v2",
+                "organizations",
+                ":organization_id",
+                "badge_assertions",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "organization_id",
+                  "description": "(Required) The ID of the issuing organization."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The resource ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ed77ac62-5aa5-4f45-b258-41dad4fdb931",
+              "name": "The OBI badge assertion.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "obi",
+                    "v2",
+                    "organizations",
+                    ":organization_id",
+                    "badge_assertions",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "organization_id",
+                      "description": "(Required) The ID of the issuing organization."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The resource ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.credly.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "264cd215-9e3a-4556-af84-1c29d411bb88",
+    "name": "Credly Web Service Badge Templates OBI Recipients API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Credly Web Service API lets an issuing organization manage verifiable digital credentials (Open Badges) on the Credly platform, owned by Pearson. Organizations create and manage badge templates, issue and revoke badges to recipients, read organization and employee data, pull an events feed, and expose recipient credentials through Open Badges Infrastructure (OBI) endpoints. All calls are scoped to an organization via the organization_id path parameter.\n\nAuthentication is either HTTP Basic - the organization's authorization_token as the username with a blank password (Base64-encoded in the Authorization header) - or OAuth 2.0 using the client_credentials grant against https://api.credly.com/oauth/token, sending the resulting Bearer token.\n\nReal-time notifications are delivered as outbound webhooks (Credly POSTs a JSON object to a configured HTTPS URL). There is no public WebSocket API.\n\nEndpoints marked \"confirmed\" were verified against Credly's live developer documentation; endpoints marked \"modeled\" follow Credly's documented, consistent /v1/organizations/{organization_id}/... REST conventions and should be reconciled against the current API reference before production use.\n\nContact Support:\n Name: Credly (Pearson)",
+      "type": "text/plain"
+    }
+  }
+}
