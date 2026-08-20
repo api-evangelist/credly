@@ -70,6 +70,8 @@ apis:
   humanURL: https://www.credly.com/docs/badge_templates
   baseURL: https://api.credly.com/v1
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
@@ -148,6 +150,8 @@ apis:
   humanURL: https://www.credly.com/docs/badge_templates
   baseURL: https://api.credly.com/v1
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
