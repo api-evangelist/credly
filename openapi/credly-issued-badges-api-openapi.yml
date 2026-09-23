@@ -1,16 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Credly Web Service Badge Templates Issued Badges API
-  description: 'The Credly Web Service API lets an issuing organization manage verifiable digital credentials (Open Badges) on the Credly platform, owned by Pearson. Organizations create and manage badge templates, issue and revoke badges to recipients, read organization and employee data, pull an events feed, and expose recipient credentials through Open Badges Infrastructure (OBI) endpoints. All calls are scoped to an organization via the organization_id path parameter.
-
-
-    Authentication is either HTTP Basic - the organization''s authorization_token as the username with a blank password (Base64-encoded in the Authorization header) - or OAuth 2.0 using the client_credentials grant against https://api.credly.com/oauth/token, sending the resulting Bearer token.
-
-
-    Real-time notifications are delivered as outbound webhooks (Credly POSTs a JSON object to a configured HTTPS URL). There is no public WebSocket API.
-
-
-    Endpoints marked "confirmed" were verified against Credly''s live developer documentation; endpoints marked "modeled" follow Credly''s documented, consistent /v1/organizations/{organization_id}/... REST conventions and should be reconciled against the current API reference before production use.'
+  title: Credly Web Service Issued Badges API
+  description: The Credly Web Service API lets an issuing organization manage verifiable digital credentials (Open Badges) on the Credly platform, owned by Pearson.
   version: '1.0'
   contact:
     name: Credly (Pearson)
@@ -169,25 +160,43 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
 components:
   schemas:
-    Metadata:
-      type: object
-      description: Pagination and response metadata.
-      properties:
-        count:
-          type: integer
-        current_page:
-          type: integer
-        total_count:
-          type: integer
-        total_pages:
-          type: integer
-        per:
-          type: integer
-    IssuedBadgeEnvelope:
+    IssuedBadgeList:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/IssuedBadge'
+          type: array
+          items:
+            $ref: '#/components/schemas/IssuedBadge'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    IssuedBadge:
+      type: object
+      properties:
+        id:
+          type: string
+        state:
+          type: string
+          enum:
+          - accepted
+          - pending
+          - rejected
+          - revoked
+        recipient_email:
+          type: string
+        issued_at:
+          type: string
+          format: date-time
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        issuer_earner_id:
+          type:
+          - string
+          - 'null'
+        badge_template:
+          $ref: '#/components/schemas/BadgeTemplate'
     IssueBadgeInput:
       type: object
       required:
@@ -227,15 +236,25 @@ components:
           - pt-BR
         suppress_badge_notification_email:
           type: boolean
-    IssuedBadgeList:
+    Metadata:
+      type: object
+      description: Pagination and response metadata.
+      properties:
+        count:
+          type: integer
+        current_page:
+          type: integer
+        total_count:
+          type: integer
+        total_pages:
+          type: integer
+        per:
+          type: integer
+    IssuedBadgeEnvelope:
       type: object
       properties:
         data:
-          type: array
-          items:
-            $ref: '#/components/schemas/IssuedBadge'
-        metadata:
-          $ref: '#/components/schemas/Metadata'
+          $ref: '#/components/schemas/IssuedBadge'
     BadgeTemplate:
       type: object
       properties:
@@ -260,32 +279,6 @@ components:
         created_at:
           type: string
           format: date-time
-    IssuedBadge:
-      type: object
-      properties:
-        id:
-          type: string
-        state:
-          type: string
-          enum:
-          - accepted
-          - pending
-          - rejected
-          - revoked
-        recipient_email:
-          type: string
-        issued_at:
-          type: string
-          format: date-time
-        expires_at:
-          type: string
-          format: date-time
-          nullable: true
-        issuer_earner_id:
-          type: string
-          nullable: true
-        badge_template:
-          $ref: '#/components/schemas/BadgeTemplate'
     Error:
       type: object
       properties:
@@ -299,6 +292,20 @@ components:
               field:
                 type: string
   parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      description: The resource ID.
+      schema:
+        type: string
+    OrganizationId:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the issuing organization.
+      schema:
+        type: string
     Page:
       name: page
       in: query
@@ -308,27 +315,7 @@ components:
         type: integer
         minimum: 1
         default: 1
-    OrganizationId:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the issuing organization.
-      schema:
-        type: string
-    Id:
-      name: id
-      in: path
-      required: true
-      description: The resource ID.
-      schema:
-        type: string
   responses:
-    Unauthorized:
-      description: Authentication failed or was not provided.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     UnprocessableEntity:
       description: The request was well-formed but could not be processed.
       content:
@@ -337,6 +324,12 @@ components:
             $ref: '#/components/schemas/Error'
     NotFound:
       description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication failed or was not provided.
       content:
         application/json:
           schema:

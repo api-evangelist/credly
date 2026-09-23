@@ -1,11 +1,7 @@
 {
   "provider": "credly",
   "sources": [
-    "credly-badge-templates-api-openapi.yml",
-    "credly-events-api-openapi.yml",
-    "credly-issued-badges-api-openapi.yml",
-    "credly-obi-recipients-api-openapi.yml",
-    "credly-organizations-api-openapi.yml"
+    "_original/credly-openapi.yml"
   ],
   "outputs": [
     "credly-badge-templates-api-openapi.yml",
@@ -17,6 +13,16 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "credly-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "credly-badge-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "credly-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "credly-issued-badges-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "credly-obi-recipients-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "credly-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
