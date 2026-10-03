@@ -38,30 +38,6 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Authentication failed or was not provided.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    OrganizationId:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the issuing organization.
-      schema:
-        type: string
-    Page:
-      name: page
-      in: query
-      required: false
-      description: The page number of paginated results.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
   schemas:
     EventList:
       type: object
@@ -115,6 +91,30 @@ components:
           format: date-time
         data:
           type: object
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      description: The page number of paginated results.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    OrganizationId:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the issuing organization.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Authentication failed or was not provided.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     basicAuth:
       type: http

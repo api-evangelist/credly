@@ -137,6 +137,30 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      description: The resource ID.
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      required: false
+      description: The page number of paginated results.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    OrganizationId:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the issuing organization.
+      schema:
+        type: string
   schemas:
     BadgeTemplate:
       type: object
@@ -162,6 +186,20 @@ components:
         created_at:
           type: string
           format: date-time
+    BadgeTemplateEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BadgeTemplate'
+    BadgeTemplateList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BadgeTemplate'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
     Metadata:
       type: object
       description: Pagination and response metadata.
@@ -176,6 +214,18 @@ components:
           type: integer
         per:
           type: integer
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              field:
+                type: string
     BadgeTemplateInput:
       type: object
       required:
@@ -195,39 +245,7 @@ components:
             type: string
         badge_template_activity_type:
           type: string
-    Error:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              field:
-                type: string
-    BadgeTemplateEnvelope:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/BadgeTemplate'
-    BadgeTemplateList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/BadgeTemplate'
-        metadata:
-          $ref: '#/components/schemas/Metadata'
   responses:
-    Unauthorized:
-      description: Authentication failed or was not provided.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     UnprocessableEntity:
       description: The request was well-formed but could not be processed.
       content:
@@ -240,30 +258,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    OrganizationId:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the issuing organization.
-      schema:
-        type: string
-    Page:
-      name: page
-      in: query
-      required: false
-      description: The page number of paginated results.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    Id:
-      name: id
-      in: path
-      required: true
-      description: The resource ID.
-      schema:
-        type: string
+    Unauthorized:
+      description: Authentication failed or was not provided.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     basicAuth:
       type: http
