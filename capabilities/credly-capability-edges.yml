@@ -1,0 +1,37 @@
+slug: credly
+provider: Credly
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Issued Badges
+  spec_file: credly-issued-badges-api-openapi.yml
+  capability_id: BC-300.40
+  capability_id_l1: BC-300
+  capability_name: Learning & Development Management
+  confidence: 0.75
+  evidence: POST /organizations/{organization_id}/badges  issueBadge  'Issue a badge'; PUT .../revoke  revokeIssuedBadge  'Revoke
+    an issued badge'
+  reason: Issuing, replacing and revoking verifiable digital credentials/certifications to recipients
+    is the awarding and administration of certifications, which the frame places under Learning & Development
+    Management.
+- tag: Badge Templates
+  spec_file: credly-badge-templates-api-openapi.yml
+  capability_id: BC-300.40
+  capability_id_l1: BC-300
+  capability_name: Learning & Development Management
+  confidence: 0.7
+  evidence: 'POST /organizations/{organization_id}/badge_templates  createBadgeTemplate  ''Create a badge
+    template''; vendor: ''verifiable digital badges and certifications'''
+  reason: Defines the certification/badge templates an organisation can award — the design side of credentialing
+    and certification programmes, which sits under Learning & Development Management. Confidence moderated
+    because templates are a configuration artefact and could also be read as generic content objects.

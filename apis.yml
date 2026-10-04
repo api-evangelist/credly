@@ -195,6 +195,9 @@ apis:
   - type: Documentation
     url: https://www.credly.com/docs/obi_specified_endpoints
 common:
+- type: CapabilityMap
+  url: capabilities/credly-capability-edges.yml
+  name: Credly Business Capability Map
 - type: AgenticAccess
   url: agentic-access/credly-agentic-access.yml
 - type: DomainSecurity
