@@ -53,18 +53,18 @@ paths:
                 type: object
 components:
   parameters:
-    Id:
-      name: id
-      in: path
-      required: true
-      description: The resource ID.
-      schema:
-        type: string
     OrganizationId:
       name: organization_id
       in: path
       required: true
       description: The ID of the issuing organization.
+      schema:
+        type: string
+    Id:
+      name: id
+      in: path
+      required: true
+      description: The resource ID.
       schema:
         type: string
   securitySchemes:

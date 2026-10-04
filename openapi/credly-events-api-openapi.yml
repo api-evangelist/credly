@@ -38,7 +38,43 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Authentication failed or was not provided.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        event_type:
+          type: string
+          enum:
+          - badge.created
+          - badge.deleted
+          - badge.privacy.changed
+          - badge.state.changed
+        occurred_at:
+          type: string
+          format: date-time
+        data:
+          type: object
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              field:
+                type: string
     EventList:
       type: object
       properties:
@@ -62,36 +98,14 @@ components:
           type: integer
         per:
           type: integer
-    Error:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              field:
-                type: string
-    Event:
-      type: object
-      properties:
-        id:
-          type: string
-        event_type:
-          type: string
-          enum:
-          - badge.created
-          - badge.deleted
-          - badge.privacy.changed
-          - badge.state.changed
-        occurred_at:
-          type: string
-          format: date-time
-        data:
-          type: object
   parameters:
+    OrganizationId:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the issuing organization.
+      schema:
+        type: string
     Page:
       name: page
       in: query
@@ -101,20 +115,6 @@ components:
         type: integer
         minimum: 1
         default: 1
-    OrganizationId:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the issuing organization.
-      schema:
-        type: string
-  responses:
-    Unauthorized:
-      description: Authentication failed or was not provided.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     basicAuth:
       type: http

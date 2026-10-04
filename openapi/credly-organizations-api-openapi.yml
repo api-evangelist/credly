@@ -59,17 +59,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    Employee:
-      type: object
-      properties:
-        id:
-          type: string
-        email:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
     Metadata:
       type: object
       description: Pagination and response metadata.
@@ -84,22 +73,6 @@ components:
           type: integer
         per:
           type: integer
-    Organization:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        url:
-          type: string
-        photo_url:
-          type: string
-    OrganizationEnvelope:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Organization'
     Error:
       type: object
       properties:
@@ -121,7 +94,54 @@ components:
             $ref: '#/components/schemas/Employee'
         metadata:
           $ref: '#/components/schemas/Metadata'
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        photo_url:
+          type: string
+    Employee:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    OrganizationEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Organization'
+  responses:
+    Unauthorized:
+      description: Authentication failed or was not provided.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
+    OrganizationId:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the issuing organization.
+      schema:
+        type: string
     Page:
       name: page
       in: query
@@ -131,26 +151,6 @@ components:
         type: integer
         minimum: 1
         default: 1
-    OrganizationId:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the issuing organization.
-      schema:
-        type: string
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Authentication failed or was not provided.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     basicAuth:
       type: http

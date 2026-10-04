@@ -137,31 +137,85 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    Id:
-      name: id
-      in: path
-      required: true
-      description: The resource ID.
-      schema:
-        type: string
-    Page:
-      name: page
-      in: query
-      required: false
-      description: The page number of paginated results.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    OrganizationId:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the issuing organization.
-      schema:
-        type: string
+  responses:
+    Unauthorized:
+      description: Authentication failed or was not provided.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: The request was well-formed but could not be processed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              field:
+                type: string
+    BadgeTemplateList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BadgeTemplate'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    BadgeTemplateEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BadgeTemplate'
+    BadgeTemplateInput:
+      type: object
+      required:
+      - name
+      - description
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+          description: Base64-encoded image or image URL.
+        skills:
+          type: array
+          items:
+            type: string
+        badge_template_activity_type:
+          type: string
+    Metadata:
+      type: object
+      description: Pagination and response metadata.
+      properties:
+        count:
+          type: integer
+        current_page:
+          type: integer
+        total_count:
+          type: integer
+        total_pages:
+          type: integer
+        per:
+          type: integer
     BadgeTemplate:
       type: object
       properties:
@@ -186,84 +240,30 @@ components:
         created_at:
           type: string
           format: date-time
-    BadgeTemplateEnvelope:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/BadgeTemplate'
-    BadgeTemplateList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/BadgeTemplate'
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-    Metadata:
-      type: object
-      description: Pagination and response metadata.
-      properties:
-        count:
-          type: integer
-        current_page:
-          type: integer
-        total_count:
-          type: integer
-        total_pages:
-          type: integer
-        per:
-          type: integer
-    Error:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              field:
-                type: string
-    BadgeTemplateInput:
-      type: object
-      required:
-      - name
-      - description
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        image:
-          type: string
-          description: Base64-encoded image or image URL.
-        skills:
-          type: array
-          items:
-            type: string
-        badge_template_activity_type:
-          type: string
-  responses:
-    UnprocessableEntity:
-      description: The request was well-formed but could not be processed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Authentication failed or was not provided.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      description: The resource ID.
+      schema:
+        type: string
+    OrganizationId:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the issuing organization.
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      required: false
+      description: The page number of paginated results.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
   securitySchemes:
     basicAuth:
       type: http
