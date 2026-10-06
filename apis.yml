@@ -57,7 +57,7 @@ tags_raw:
 - Verifiable Credentials
 - Pearson
 created: '2026-07-05'
-modified: '2026-07-05'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
 - aid: credly:credly-badge-templates-api
@@ -195,6 +195,10 @@ apis:
   - type: Documentation
     url: https://www.credly.com/docs/obi_specified_endpoints
 common:
+- url: https://learn.credly.com/blog
+  type: Blog
+- url: https://learn.credly.com/blog/rss.xml
+  type: BlogRSS
 - type: CapabilityMap
   url: capabilities/credly-capability-edges.yml
   name: Credly Business Capability Map
