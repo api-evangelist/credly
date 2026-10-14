@@ -1,0 +1,38 @@
+edges:
+- partner_name: 1EdTech
+  partner: null
+  type: contract
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://site.imsglobal.org/certifications
+  category: 1EdTech certified products
+  contract_reference:
+    register: 1EdTech certified product directory (TrustEd Apps)
+    spec_file: null
+    standard: 1EdTech
+    role: Contributing Member
+    registered_name: Credly by Pearson
+    matched_domain: credly.com
+    matched_by: domain
+    standards:
+    - Open Badges v2.0
+    - Open Badges v3.0
+    certified_products:
+    - product: Credly
+      version: v202601
+      standards:
+      - Open Badges v2.0
+      - Open Badges v3.0
+      implementation:
+      - 'Type: Issuer'
+      attributes:
+      - Certified Product
+      lapsed: false
+      url: https://site.imsglobal.org/certifications/credly-by-pearson/credly/v202601
+    detected_by: sweep-edtech.py
+    detected: '2026-10-14'
+generated: '2026-10-14'
+method: searched
+checked:
+- https://site.imsglobal.org/certifications
